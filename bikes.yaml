@@ -1,0 +1,124 @@
+import: 
+    - https://www.nextzen.org/carto/refill-style/refill-style.yaml
+    - https://www.nextzen.org/carto/refill-style/themes/color-gray-gold.zip
+
+
+global:
+    sdk_api_key: 4MhO0-_uT6KUx2HSemhnWA
+
+
+sources:
+
+    bike_rack_api:
+        type: GeoJSON
+        url: https://data.sfgov.org/resource/dd7x-3h4a.geojson 
+styles:
+    _text:
+        base: text
+        blend_order: 2
+
+layers:
+    _bike_rack_api:
+        # filter: {year_installed: '1999'}
+        # filter: 
+            # year_installed: {max: '2012'}
+            # not: { year_installed: '0'}
+
+        data:  {source: bike_rack_api}
+        draw: 
+            points:
+                # size: 8px
+                size: |
+                    function(){
+                     // console.log(feature.number_of_spaces)
+                     return Math.log(feature.number_of_spaces) * $zoom
+                        }
+                collide: false
+                color: [1,0,0,0.5]
+                text:
+                    # collide: false
+                    text_source: |
+                        function(){
+                            var name = feature.location  + " (" + feature.number_of_spaces + ")"
+                            // return name
+                            // if ($zoom == 17) {
+                            //     return feature.number_of_spaces
+                            // }
+                            console.log(name)
+                            if ($zoom > 17) {
+                                return name
+                                }
+                            }
+                    font:
+                        fill: white
+                        stroke:
+                            color: grey
+                            width: 3
+#                 color: |
+#                     function(){
+#                         if (feature.year_installed >= 2013){
+#                             return [1,0,1,0.5]
+#                             }
+#                         if ((feature.year_installed < 2013) && (feature.year_installed >= global.year_2)){
+#                             return [1,1,0,0.5]
+#                             }
+#                         if (feature.year_installed < global.year_2){
+#                             return [0,1,1,0.5]
+#                             }
+#                         }
+        labels:
+            filter: {$zoom: {min: 15}}
+            draw:
+                text:
+                    collide: false
+                    text_source: |
+                        function(){
+                            var spaces = feature.number_of_spaces * 1
+                            console.log(spaces)
+                            // var name = feature.location  + " (" + feature.number_of_spaces + ")"
+                            // return name
+                            if (($zoom < 18) && (spaces > 5)) {
+                                return feature.number_of_spaces
+                            }
+                            // if ($zoom > 17) {
+                            //     return name
+                            // }
+                            // }                            console.log(name)
+                        }
+
+                    font:
+                        fill: white
+                        stroke:
+                            color: grey
+                            width: 3
+    
+    _bike_racks:
+        data: {source: bike_rack}
+        # filter: {Year Installed: {min: 2015}}
+        draw:
+            points:
+                collide: false
+                # size: 10
+                size: |
+                    function(){return 10 + (feature["Number of Spaces"]) }
+                # color: [1,0.5,0,0.5]
+                color: global.year_color
+                outline:
+                    color: white
+                    width: 0.2px
+                # text:
+                    style: _text
+
+            # _text:
+                # collide: false
+                # text_source: Number of Spaces
+                    text_source: |
+                        function(){
+                            return feature.Location  + " (" + feature["Number of Spaces"] + ")"
+                        }
+
+                    font:
+                        fill: white
+                        stroke:
+                            color: grey
+                            width: 3
