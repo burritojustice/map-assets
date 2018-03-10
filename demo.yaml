@@ -1,3 +1,17 @@
 global:
     sdk_api_key: DpCrhQqsR2igQPEINRTfcw
     geocode_key: ge-5bdbeb8dbfb3a8f0
+
+styles:
+    _text:
+        base: text
+        blend_order: 2
+    _text_5:
+        base: text
+        blend_order: 5    
+    _points:
+        base: points
+        blend_order: 3
+    _lines:
+        base: lines
+        blend_order: 4
